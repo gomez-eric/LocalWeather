@@ -1,0 +1,55 @@
+:root {
+  --daFont: 'Open Sans', sans-serif;
+  --daColor: black;
+  --daFontColor: white;
+}
+
+body {
+  font-family: var(--daFont);
+  color:var(--daFontColor);
+  background-color:var(--daColor);
+}
+
+p {
+  text-align: center;
+}
+
+.jumbotron {
+  padding:20px;
+  margin: 50px;
+  background: none;
+}
+
+.mainStat {
+  padding-top: 80px;
+}
+
+.changeTemp {
+  background-color: black;
+  font-size: 25px;
+  transition: all 0.8s ease .05s;
+}
+
+.daIcon {
+  font-size: 80px;
+  transition: all 0.8s ease .05s;
+  -webkit-animation-delay: 0s;
+  -webkit-animation-iteration-count: infinite;
+}
+.daIcon:hover {
+  color: gray;
+}
+
+.iconDiv {
+  padding-top: 80px;
+}
+
+.daMode {
+  color: red;
+  font-size: 25px;
+  transition: all 0.8s ease .05s;
+}
+
+.daMode:hover {
+  color: gray;
+}
