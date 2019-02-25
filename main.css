@@ -1,13 +1,13 @@
 :root {
-  --daFont: 'Open Sans', sans-serif;
-  --daColor: black;
-  --daFontColor: white;
+  --font: 'Open Sans', sans-serif;
+  --bg_Color: black;
+  --font_Color: white;
 }
 
 body {
-  font-family: var(--daFont);
-  color:var(--daFontColor);
-  background-color:var(--daColor);
+  font-family: var(--font);
+  color: var(--font_Color);
+  background-color: var(--bg_Color);
 }
 
 p {
@@ -30,13 +30,13 @@ p {
   transition: all 0.8s ease .05s;
 }
 
-.daIcon {
+.Icon {
   font-size: 80px;
   transition: all 0.8s ease .05s;
   -webkit-animation-delay: 0s;
   -webkit-animation-iteration-count: infinite;
 }
-.daIcon:hover {
+.Icon:hover {
   color: gray;
 }
 
@@ -44,12 +44,13 @@ p {
   padding-top: 80px;
 }
 
-.daMode {
+.Mode {
+  cursor: pointer;
   color: red;
   font-size: 25px;
   transition: all 0.8s ease .05s;
 }
 
-.daMode:hover {
+.Mode:hover {
   color: gray;
 }

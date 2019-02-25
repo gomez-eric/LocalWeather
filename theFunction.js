@@ -1,6 +1,6 @@
 var latlon = [];
 var weatherObj;
-var daURL = "";
+var URL = "";
 var currentMode = "wi-celsius";
 var currentTemp = 0;
 var currentConditions = "";
@@ -11,27 +11,44 @@ var checker = ""
 
 $( document ).ready(function(){
   $(".mainStat").hide();
-
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
       saveLocation(position.coords.latitude, position.coords.longitude);
+    }, function error(e) {
+      failedLoad(e);
     });
   } else {
-    $(".daCity").html("Geolocation is not supported by this browser.");
-    console.log("Geolocation is not supported by this browser.");
+    $(".mainStat").show().addClass("animated fadeIn");
+    $(".City").html("GEOLOCATION IS NOT SUPPORTED BY THIS BROWSER.");
+    console.log("GEOLOCATION IS NOT SUPPORTED BY THIS BROWSER.");
   }
 });
 
-function saveLocation(daOne, daTwo){
-  latlon.push(daOne,daTwo);
-  daURL ="https://fcc-weather-api.glitch.me/api/current?lat=";
-  daURL += latlon[0];
-  daURL += "&lon=";
-  daURL += latlon[1];
+function failedLoad(e){
+  $(".mainStat").show().addClass("animated fadeIn");
+  if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    $(".City").html("TURN LOCATION ON");
+  } else {
+    $(".City").html("SITE NEEDS GEOLOCATION TO FUNCTION");
+    navigator.geolocation.getCurrentPosition(function() {
+      window.location.reload();
+    });
+
+  }
+
+  console.log(e);
+}
+
+function saveLocation(One, Two){
+  latlon.push(One,Two);
+  URL ="https://fcc-weather-api.glitch.me/api/current?lat=";
+  URL += latlon[0];
+  URL += "&lon=";
+  URL += latlon[1];
 
 
   // This test is to retrieve data from the API
-  $.getJSON(daURL, function(json) {
+  $.getJSON(URL, function(json) {
     // Get string into a variable
     var string = (JSON.stringify(json));
     // Convert string into object
@@ -44,78 +61,79 @@ function saveLocation(daOne, daTwo){
     currentTemp = weatherObj.main.temp;
 
     $(".mainStat").show().addClass("animated fadeIn");
-
-    $(".daCity").html(weatherObj.name.toUpperCase() + ", "  + weatherObj.sys.country.toUpperCase());
+    $(".City").html(weatherObj.name.toUpperCase() + ", "  + weatherObj.sys.country.toUpperCase());
 
     if (currentMode == "wi-fahrenheit") {
       currentTemp = currentTemp * 9 / 5 + 32;
-      $(".daTemp").html(currentTemp + "<i id=\"daMode\" class=\"daMode wi wi-fahrenheit\">");
+      $(".Temp").html(currentTemp + "<i id=\"Mode\" class=\"Mode wi wi-fahrenheit\">");
     } else if (currentMode == "wi-celsius") {
       currentTemp = weatherObj.main.temp;
-      $(".daTemp").html(currentTemp + "<i id=\"daMode\" class=\"daMode wi wi-celsius\">");
+      $(".Temp").html(currentTemp + "<i id=\"Mode\" class=\"Mode wi wi-celsius\">");
     };
 
-    $(".daIcon").click( function hello(){
+    $(".Icon").click( function (){
       if (toggleContrast == false) {
-        $(':root').css({'--daColor': "white"})
-        $(':root').css({'--daFontColor': "black"})
+        document.body.style.setProperty('--bg_Color', 'white');
+        document.body.style.setProperty('--font_Color', 'black');
         toggleContrast = true;
       } else if (toggleContrast == true) {
-        $(':root').css({'--daColor': "black"})
-        $(':root').css({'--daFontColor': "white"})
+        document.body.style.setProperty('--bg_Color', 'black');
+        document.body.style.setProperty('--font_Color', 'white');
         toggleContrast = false;
       }
     });
 
     //With this way jQuery listens into the change in the document.
-    $(document).on("click", ".daMode", function() {
-      if (currentMode == "wi-fahrenheit") {
-        currentTemp = weatherObj.main.temp;
-        $(".daTemp").html(currentTemp + "<i id=\"daMode\" class=\"daMode wi wi-celsius\">");
-        currentMode = "wi-celsius";
-      } else if (currentMode == "wi-celsius") {
-        currentTemp = Math.round(currentTemp * 9 / 5 + 32);
-        $(".daTemp").html(currentTemp + "<i id=\"daMode\" class=\"daMode wi wi-fahrenheit\">");
-        currentMode = "wi-fahrenheit";
+    $(document).on("click mousedown", ".Mode", function(e) {
+      if(e.which != 3){ // prevents right click switch
+        if (currentMode == "wi-fahrenheit") {
+          currentTemp = weatherObj.main.temp;
+          $(".Temp").html(currentTemp + "<i id=\"Mode\" class=\"Mode wi wi-celsius\">");
+          currentMode = "wi-celsius";
+        } else if (currentMode == "wi-celsius") {
+          currentTemp = Math.round(currentTemp * 9 / 5 + 32);
+          $(".Temp").html(currentTemp + "<i id=\"Mode\" class=\"Mode wi wi-fahrenheit\">");
+          currentMode = "wi-fahrenheit";
+        }
       }
     });
 
 
 
-    $(".daDes").html(weatherObj.weather[0].main.toUpperCase() + ": " + weatherObj.weather[0].description.toUpperCase());
+    $(".Des").html(weatherObj.weather[0].main.toUpperCase() + ": " + weatherObj.weather[0].description.toUpperCase());
 
     currentConditions = weatherObj.weather[0].main.toLowerCase();;
 
     switch (currentConditions) {
       case 'drizzle':
-        $(".daIcon").addClass("wi-sprinkle").addClass("animated pulse");
+        $(".Icon").addClass("wi-sprinkle").addClass("animated pulse");
         break;
       case 'clouds':
-        $(".daIcon").addClass("wi-cloudy").addClass("animated pulse");
+        $(".Icon").addClass("wi-cloudy").addClass("animated pulse");
         break;
       case 'rain':
-        $(".daIcon").addClass("wi-rain").addClass("animated pulse");
+        $(".Icon").addClass("wi-rain").addClass("animated pulse");
         break;
       case 'snow':
-        $(".daIcon").addClass("wi-snow").addClass("animated pulse");
+        $(".Icon").addClass("wi-snow").addClass("animated pulse");
         break;
       case 'clear':
-        $(".daIcon").addClass("wi-day-sunny").addClass("animated pulse");
+        $(".Icon").addClass("wi-day-sunny").addClass("animated pulse");
         break;
       case 'thunderstorm':
-        $(".daIcon").addClass("wi-thunderstorm").addClass("animated pulse");
+        $(".Icon").addClass("wi-thunderstorm").addClass("animated pulse");
         break;
       case 'haze':
-        $(".daIcon").addClass("wi-fog").addClass("animated pulse");
+        $(".Icon").addClass("wi-fog").addClass("animated pulse");
         break;
       default:
-        $('.daIcon').addClass("wi-na").addClass("animated pulse");
+        $('.Icon').addClass("wi-na").addClass("animated pulse");
       }
 
   })
 
   console.log("latlon: " + latlon);
-  console.log("daURL: " + daURL);
+  console.log("URL: " + URL);
 
 
 
